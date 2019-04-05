@@ -8,7 +8,7 @@ Features:
 * Scan a single file. Attempt to find a pattern matching with given file.
 * Report producing upon scan process completion.
 * Delivering scan report by email.
-* Produce logs.
+* Logging.
 
 
 ### Prerequisites
