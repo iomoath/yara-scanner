@@ -17,10 +17,6 @@ import common_functions
 import email_sender
 from datetime import datetime
 
-"""
-If email notification is enabled then it will be executed from here. define a function and wait for results from each module.
-send execution result via email 
-"""
 
 arg_parser = None
 
