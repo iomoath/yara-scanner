@@ -7,7 +7,7 @@ Features:
 * Scan web access logs. By getting list of accessed file paths from access logs and attempt to find a pattern matching with Yara Rules.
 * Scan a single file. Attempt to find a pattern matching with given file.
 * Report producing upon scan process completion.
-* Delivering scan result to email notifications.
+* Delivering scan report by email.
 * Produce logs.
 
 
