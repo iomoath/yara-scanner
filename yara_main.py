@@ -84,12 +84,6 @@ def run_scanner(args):
         print('[+] Report sent to {}'.format(args['smtp_recipient']))
 
 
-    # take screenshots
-    # Write Github README
-    # Learn more about license thing
-    # Push to Github
-
-
 
 def run_yara_updater():
     yara_updater.update()
