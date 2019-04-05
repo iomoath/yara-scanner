@@ -97,7 +97,17 @@ def run(args):
 
 
 def generate_argparser():
-    ap = argparse.ArgumentParser()
+  ascii_logo = """
+     ____  ____                          ______                                                 
+    |_  _||_  _|                       .' ____ \                                                
+      \ \  / / ,--.   _ .--.  ,--.     | (___ \_| .---.  ,--.   _ .--.   _ .--.  .---.  _ .--.  
+       \ \/ / `'_\ : [ `/'`\]`'_\ :     _.____`. / /'`\]`'_\ : [ `.-. | [ `.-. |/ /__\\[ `/'`\] 
+       _|  |_ // | |, | |    // | |,   | \____) || \__. // | |, | | | |  | | | || \__., | |     
+      |______|\'-;__/[___]   \'-;__/    \______.''.___.'\'-;__/[___||__][___||__]'.__.'[___]    
+                                                                                                
+        https://github.com/iomoath/yara-scanner
+        """
+    ap = argparse.ArgumentParser(ascii_logo)
 
     ap.add_argument("--update", action='store_true',
                     help="Fetch latest Yara-Rules and update the current.")
