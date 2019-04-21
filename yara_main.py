@@ -17,8 +17,8 @@ import common_functions
 import email_sender
 from datetime import datetime
 
-
 arg_parser = None
+
 
 def build_smtp_mailer_param(args, message_body):
     t = {
@@ -56,7 +56,6 @@ def run_scanner(args):
     except:
         sys.exit(0)
 
-
     # Generate report
     report_file_name = 'YaraScanner_Report_{}.html'.format(datetime.now().strftime('%Y_%B_%d_%H_%M_%S'))
     if args['gen_report'] or args['smtp_host'] is not None:
@@ -66,7 +65,6 @@ def run_scanner(args):
         report = report_generator.generate_report(match_result)
         common_functions.write_to_file(report_file_name, report)
         print('[+] Report saved to "{}"'.format(report_file_name))
-
 
     # send email notification
     if args['smtp_host'] is not None and args['smtp_port'] > 0:
@@ -80,13 +78,11 @@ def run_scanner(args):
         print('[+] Report sent to {}'.format(args['smtp_recipient']))
 
 
-
 def run_yara_updater():
     yara_updater.update()
 
 
 def run(args):
-
     if args["verbose"]:
         constants.verbose_enabled = True
 
@@ -97,30 +93,29 @@ def run(args):
 
 
 def generate_argparser():
-  ascii_logo = """
-     ____  ____                          ______                                                 
-    |_  _||_  _|                       .' ____ \                                                
-      \ \  / / ,--.   _ .--.  ,--.     | (___ \_| .---.  ,--.   _ .--.   _ .--.  .---.  _ .--.  
-       \ \/ / `'_\ : [ `/'`\]`'_\ :     _.____`. / /'`\]`'_\ : [ `.-. | [ `.-. |/ /__\\[ `/'`\] 
-       _|  |_ // | |, | |    // | |,   | \____) || \__. // | |, | | | |  | | | || \__., | |     
-      |______|\'-;__/[___]   \'-;__/    \______.''.___.'\'-;__/[___||__][___||__]'.__.'[___]    
-                                                                                                
-        https://github.com/iomoath/yara-scanner
-        """
+    ascii_logo = """
+ ____  ____                          ______                                                 
+|_  _||_  _|                       .' ____ \                                                
+  \ \  / / ,--.   _ .--.  ,--.     | (___ \_| .---.  ,--.   _ .--.   _ .--.  .---.  _ .--.  
+   \ \/ / `'_\ : [ `/'`\]`'_\ :     _.____`. / /'`\]`'_\ : [ `.-. | [ `.-. |/ /__\\[ `/'`\] 
+   _|  |_ // | |, | |    // | |,   | \____) || \__. // | |, | | | |  | | | || \__., | |     
+  |______|\'-;__/[___]   \'-;__/    \______.''.___.'\'-;__/[___||__][___||__]'.__.'[___]    
+
+    https://github.com/iomoath/yara-scanner
+    """
     ap = argparse.ArgumentParser(ascii_logo)
 
     ap.add_argument("--update", action='store_true',
                     help="Fetch latest Yara-Rules and update the current.")
 
-    ap.add_argument("--scan-access-logs", action='store',type=str,
+    ap.add_argument("--scan-access-logs", action='store', type=str,
                     help="Path to a access logs file. Get list of accessed file paths from access logs and attempt to find a pattern matching with Yara Rules.")
 
     ap.add_argument("--www-path", action='store', type=str,
                     help="Path to public web directory ex; /var/www/html, /home/user/public_html' required for option '--scan-access-logs' ")
 
-    ap.add_argument("--tail",  action='store', type=int, default=0,
+    ap.add_argument("--tail", action='store', type=int, default=0,
                     help="Number of lines to read from access logs file, starting from the end of the file. If not set then will read the entire file")
-
 
     ap.add_argument("--scan-dir", action='store', type=str,
                     help="Path to a directory to be scanned. Scan for file(s) in given directory path and attempt to find a pattern matching with Yara-Ruels.")
