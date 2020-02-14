@@ -19,7 +19,7 @@ Features:
 ## Installing
 
 1. Clone or download the project files.
-2. Install ```yara-python``` library if it is not installed on your system. ```pip3 install yara-tools```
+2. Install ```yara-python``` library if it is not installed on your system. ```pip3 install yara-python```
 3. Update project Yara rules:  ``` python3 yara-scanner/yara_main.py --update```
 4. Create a cron in your system cron manager to run the yara scanner and updater.
 
