@@ -18,8 +18,8 @@ module_name = os.path.basename(__file__)
 
 # More rules can be added, checkout Yara-Rule Repo at https://github.com/Yara-Rules/rules
 yara_rules_file_list = [
-    'Webshells_index.yar',
-    'Exploit-Kits_index.yar',
+    'webshells_index.yar',
+    'exploit_kits_index.yar',
     #'suspicious_strings.yar'
 ]
 
