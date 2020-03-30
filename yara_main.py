@@ -3,7 +3,7 @@ __license__ = "GNU General Public License v2.0"
 __version__ = "1.0"
 __email__ = "moath@vegalayer.com"
 __created__ = "4/Apr/2019"
-__modified__ = "4/Apr/2019"
+__modified__ = "30/Mar/2020"
 __status__ = "Production"
 __project_page__ = "https://github.com/iomoath/yara-scanner"
 
@@ -11,7 +11,7 @@ import argparse
 import sys
 import yara_updater
 import yara_scanner
-import constants
+import settings
 import report_generator
 import common_functions
 import email_sender
@@ -19,21 +19,6 @@ from datetime import datetime
 
 arg_parser = None
 
-
-def build_smtp_mailer_param(args, message_body):
-    t = {
-        "host": args['smtp_host'],
-        "port": args['smtp_port'],
-        "ssl": args['smtp_ssl'],
-        "username": args['smtp_username'],
-        "password": args['smtp_password'],
-        "from": "YaraScanner <{}>".format(args['smtp_from']),
-        "recipients": [args['smtp_recipient']],
-        "message_body": message_body,
-        "subject": 'YaraScanner - Scan Report {}'.format(common_functions.get_datetime()),
-        "attachments": args['attachments']
-    }
-    return t
 
 
 def run_scanner(args):
@@ -58,24 +43,27 @@ def run_scanner(args):
 
     # Generate report
     report_file_name = 'YaraScanner_Report_{}.html'.format(datetime.now().strftime('%Y_%B_%d_%H_%M_%S'))
-    if args['gen_report'] or args['smtp_host'] is not None:
+    if args['gen_report']:
         print('[+] Generating report..')
 
-    if args['gen_report']:
+    if args['gen_report'] and settings.generate_report_file:
         report = report_generator.generate_report(match_result)
         common_functions.write_to_file(report_file_name, report)
         print('[+] Report saved to "{}"'.format(report_file_name))
 
-    # send email notification
-    if args['smtp_host'] is not None and args['smtp_port'] > 0:
+    # send report by email
+    if args['gen_report'] and settings.smtp_host is not None and settings.smtp_port > 0:
         report = report_generator.generate_report(match_result)
 
         attachment = [{'text': report, 'file_name': report_file_name}]
-        args['attachments'] = attachment
-        smtp_mailer_param = build_smtp_mailer_param(args, constants.email_message_body_scan_complete)
-        print('[+] Delivering report to {}'.format(args['smtp_recipient']))
+        smtp_mailer_param = common_functions.build_smtp_config_dict()
+        smtp_mailer_param['message_body'] = settings.email_body_scan_complete
+        smtp_mailer_param['subject'] = 'Scan Report {}'.format(common_functions.get_datetime())
+        smtp_mailer_param['attachments'] = attachment
+
+        print('[+] Delivering report to {}'.format(settings.email_alert_recipients))
         email_sender.send_message(smtp_mailer_param)
-        print('[+] Report sent to {}'.format(args['smtp_recipient']))
+        print('[+] Report sent to {}'.format(settings.email_alert_recipients))
 
 
 def run_yara_updater():
@@ -84,7 +72,7 @@ def run_yara_updater():
 
 def run(args):
     if args["verbose"]:
-        constants.verbose_enabled = True
+        settings.verbose_enabled = True
 
     if args["update"]:
         run_yara_updater()
@@ -128,27 +116,6 @@ def generate_argparser():
 
     ap.add_argument("--gen-report", action='store_true',
                     help="Generate an HTML report.")
-
-    ap.add_argument("--smtp-host", action='store',
-                    help="SMTP Host. If SMTP settings is set, then a report copy for the pattern matching process will be sent by email.")
-
-    ap.add_argument("--smtp-port", action='store', type=int,
-                    help="SMTP server port.")
-
-    ap.add_argument("--smtp-ssl", action='store_true',
-                    help="SMTP server require SSL/TLS.")
-
-    ap.add_argument("--smtp-username", action='store',
-                    help="SMTP account username.")
-
-    ap.add_argument("--smtp-password", action='store',
-                    help="SMTP account password.")
-
-    ap.add_argument("--smtp-from", action='store',
-                    help="Message sender email to be included in message sender field.")
-
-    ap.add_argument("--smtp-recipient", action='store',
-                    help="Reports will be sent to this email.")
 
     ap.add_argument("-v", "--verbose", action='store_true',
                     help="Show more information while processing.")
