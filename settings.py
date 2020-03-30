@@ -23,14 +23,14 @@ smtp_port = 587
 
 # SMTP server require SSL/TLS ?
 smtp_ssl = True
-smtp_username = "foxbots.sec@gmail.com"
-smtp_password = "Vp3aSAuXfc3TgN3D"
+smtp_username = ""
+smtp_password = ""
 
 # Message sender email to be included in message sender field
-smtp_from = "YaraScanner <foxbots.sec@gmail.com>"
+smtp_from = "YaraScanner <email@example.org>"
 
 # Reports & alerts will be sent to this email(s)
-email_alert_recipients = ["moath@vegalayer.com"]
+email_alert_recipients = ["email@example.org"]
 
 
 # Email body for scan report
