@@ -3,14 +3,14 @@ __license__ = "GNU General Public License v2.0"
 __version__ = "1.0"
 __email__ = "moath@vegalayer.com"
 __created__ = "4/Apr/2019"
-__modified__ = "4/Apr/2019"
+__modified__ = "30/Mar/2020"
 __status__ = "Production"
 __project_page__ = "https://github.com/iomoath/yara-scanner"
 
 import os
 import common_functions
 import logger
-import constants
+import settings
 
 
 module_name = os.path.basename(__file__)
@@ -20,7 +20,7 @@ module_name = os.path.basename(__file__)
 yara_rules_file_list = [
     'webshells_index.yar',
     'exploit_kits_index.yar',
-    #'suspicious_strings.yar'
+    'suspicious_strings.yar'
 ]
 
 
@@ -30,11 +30,11 @@ def init_directories():
     Create temp & Yara rules directories if not exists
     :return:
     """
-    if not os.path.isdir(constants.tmp_directory):
-        os.makedirs(constants.tmp_directory)
+    if not os.path.isdir(settings.tmp_directory):
+        os.makedirs(settings.tmp_directory)
 
-    if not os.path.isdir(constants.yara_rules_directory):
-        os.makedirs(constants.yara_rules_directory)
+    if not os.path.isdir(settings.yara_rules_directory):
+        os.makedirs(settings.yara_rules_directory)
 
 
 def find_yara_files():
@@ -45,7 +45,7 @@ def find_yara_files():
     yara_rule_path_list = []
 
     for r in yara_rules_file_list:
-        yara_rule_path = common_functions.find_files(r, os.path.join(constants.tmp_directory, constants.yara_rules_directory_name_in_zip))
+        yara_rule_path = common_functions.find_files(r, os.path.join(settings.tmp_directory, settings.yara_rules_directory_name_in_zip))
         if yara_rule_path is not None:
             yara_rule_path_list.append(yara_rule_path)
 
@@ -54,7 +54,7 @@ def find_yara_files():
 
 
 def clean_up():
-    common_functions.delete_directory_content(constants.tmp_directory)
+    common_functions.delete_directory_content(settings.tmp_directory)
 
 
 def update():
@@ -69,12 +69,12 @@ def update():
         print('[+] Initializing directories..')
         init_directories()
 
-        logger.log_debug('Fetching latest Yara-Rules from {}'.format(constants.yara_rules_repo_download_url), module_name)
-        print('[+] Fetching latest Yara-Rules from {}'.format(constants.yara_rules_repo_download_url))
-        save_path = os.path.join(constants.tmp_directory, constants.yara_rules_zipped_name)
+        logger.log_debug('Fetching latest Yara-Rules from {}'.format(settings.yara_rules_repo_download_url), module_name)
+        print('[+] Fetching latest Yara-Rules from {}'.format(settings.yara_rules_repo_download_url))
+        save_path = os.path.join(settings.tmp_directory, settings.yara_rules_zipped_name)
 
-        common_functions.download(constants.yara_rules_repo_download_url, save_path)
-        common_functions.extract_zip(save_path, constants.tmp_directory)
+        common_functions.download(settings.yara_rules_repo_download_url, save_path)
+        common_functions.extract_zip(save_path, settings.tmp_directory)
 
         yara_rule_path_list = find_yara_files()
 
@@ -85,7 +85,7 @@ def update():
 
         logger.log_debug('Compiling rules', module_name)
         print('[+] Compiling rules..')
-        common_functions.compile_yara_rules(yara_rule_path_list, constants.yara_rules_directory)
+        common_functions.compile_yara_rules(yara_rule_path_list, settings.yara_rules_directory)
 
         logger.log_debug('Cleaning up', module_name)
         print('[+] Cleaning up..')
