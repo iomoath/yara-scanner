@@ -32,7 +32,7 @@ def send_message(dict_msg_attr):
     outer.preamble = 'You will not see this in a MIME-aware mail reader.\n'
 
     # List of attachments, dict_msg_attr["attachments"] contains a list of strings.
-    # each string will be encoded and attached as a file to the message
+    # each string will be encoded and attached as a file to the message.
     if 'attachments' in dict_msg_attr and  dict_msg_attr["attachments"] is not None:
         attachments = dict_msg_attr["attachments"]
         for txt_attachments in attachments:
