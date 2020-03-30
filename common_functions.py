@@ -3,7 +3,7 @@ __license__ = "GNU General Public License v2.0"
 __version__ = "1.0"
 __email__ = "moath@vegalayer.com"
 __created__ = "4/Apr/2019"
-__modified__ = "4/Apr/2019"
+__modified__ = "30/Mar/2020"
 __status__ = "Production"
 __project_page__ = "https://github.com/iomoath/yara-scanner"
 
@@ -15,8 +15,10 @@ import urllib.request
 import shutil
 import logger
 import yara
-import constants
+import settings
 from datetime import datetime
+import email_sender
+
 
 module_name = os.path.basename(__file__)
 
@@ -112,7 +114,7 @@ def write_to_file(file_path, content):
         file.write(content)
 
 def print_verbose(msg):
-    if not constants.verbose_enabled:
+    if not settings.verbose_enabled:
         return
     print(msg)
 
@@ -141,7 +143,8 @@ def read_file_lines(file_path):
 
 
 def get_datetime():
-    return datetime.now().strftime('%Y-%B-%d %H:%M:%S')
+    return datetime.now().strftime(settings.date_time_format)
+
 
 def tail(file_path, lines=1, _buffer=4098):
     """
@@ -174,3 +177,53 @@ def tail(file_path, lines=1, _buffer=4098):
     close_file(f)
     return lines_found[-lines:]
 
+
+def build_smtp_config_dict():
+    t = {
+        "host": settings.smtp_host,
+        "port": settings.smtp_port,
+        "ssl": settings.smtp_ssl,
+        "username": settings.smtp_username,
+        "password": settings.smtp_password,
+        "from": settings.smtp_from,
+        "recipients": settings.email_alert_recipients,
+    }
+    return t
+
+
+def report_incident_by_email(file_path, rules_matched, yara_rules_file_name, event_time):
+    if not settings.email_alerts_enabled:
+        return
+
+    try:
+        file_name = os.path.basename(file_path)
+        short_file_name = file_name
+        if file_name is not None and len(file_name) > 40:
+            short_file_name = file_name[0 : 39]
+
+        smtp_mailer_param = build_smtp_config_dict()
+        smtp_mailer_param['message_body'] = build_incident_email_message_body(file_name, file_path, rules_matched, yara_rules_file_name, event_time)
+        smtp_mailer_param['subject'] = 'Match Found: {}'.format(short_file_name)
+
+        print('[+] Sending incident info to {}'.format(settings.email_alert_recipients))
+        email_sender.send_message(smtp_mailer_param)
+        print('[+] Incident info sent to {}'.format(settings.email_alert_recipients))
+    except Exception as e:
+        print('[-] ERROR: {}'.format(e))
+        logger.log_error(e, module_name)
+
+
+def build_incident_email_message_body(file_name, file_path, rules_matched, yara_rules_file_name, event_time):
+    message = settings.email_body_match_found
+    message += "\n\n"
+    message += "Event time: {}".format(event_time)
+    message += "\n"
+    message += "File name: {}".format(file_name)
+    message += "\n"
+    message += "File path: {}".format(file_path)
+    message += "\n"
+    message += "Rules matches: {}".format(rules_matched)
+    message += "\n"
+    message += "Yara rules file: {}".format(yara_rules_file_name)
+    message += "\n\n"
+    return message
