@@ -8,12 +8,12 @@ __status__ = "Production"
 __project_page__ = "https://github.com/iomoath/yara-scanner"
 
 import logging
-from constants import log_file_path
+from settings import debug_log_file_path
 
 debug_log_enabled = True
 
 
-logging.basicConfig(filename=log_file_path,
+logging.basicConfig(filename=debug_log_file_path,
                     level=logging.INFO,
                     format="%(asctime)s  %(levelname)-10s - %(message)s",
                     datefmt="%Y-%m-%d %H:%M:%S")
