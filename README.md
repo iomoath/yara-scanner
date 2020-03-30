@@ -20,8 +20,9 @@ Features:
 
 1. Clone or download the project files.
 2. Install ```yara-python``` library if it is not installed on your system. ```pip3 install yara-python```
-3. Update project Yara rules:  ``` python3 yara-scanner/yara_main.py --update```
-4. Create a cron in your system cron manager to run the yara scanner and updater.
+3. Adjust your settings in settings.py
+4. Update project Yara rules:  ``` python3 yara-scanner/yara_main.py --update```
+5. Create a cron in your system cron manager to run the yara scanner and updater.
 
 The following cron will run on 12:00 AM every week, and update yara-rules. Adjust as your requirements.
 
@@ -34,7 +35,7 @@ $ crontab -e
 
 For automated scans, This cron will run every week on 3:00 AM and will send scan report to noc@example.org
 ```
-0 3 * * */7 python3 /opt/yara-scanner/yara_main.py --scan-dir '/home/xxx/dir' --smtp-host 'smtp.example.com' --smtp-port 587 --smtp-ssl --smtp-username 'x@example.com' --smtp-password '123' --smtp-from 'x@example.com' --smtp-recipient 'noc@example.org'
+0 3 * * */7 python3 /opt/yara-scanner/yara_main.py --scan-dir '/home/xxx/dir' --gen-report --recursive
 ```
 
 At this step, YaraScanner is ready to use with basic setup. By default the following Yara rules are used 
@@ -58,13 +59,11 @@ However, if you have rules that needs to be compiled, there's the steps:
 
 ## Arugments
 ```
-usage: yara_main.py [-h] [--update] [--scan-access-logs SCAN_ACCESS_LOGS]
-                    [--www-path WWW_PATH] [--tail TAIL] [--scan-dir SCAN_DIR]
-                    [-r] [--scan-file SCAN_FILE] [--gen-report]
-                    [--smtp-host SMTP_HOST] [--smtp-port SMTP_PORT]
-                    [--smtp-ssl] [--smtp-username SMTP_USERNAME]
-                    [--smtp-password SMTP_PASSWORD] [--smtp-from SMTP_FROM]
-                    [--smtp-recipient SMTP_RECIPIENT] [-v] [--version]
+yara $python3 yara_main.py --help
+usage:
+       [-h] [--update] [--scan-access-logs SCAN_ACCESS_LOGS]
+       [--www-path WWW_PATH] [--tail TAIL] [--scan-dir SCAN_DIR] [-r]
+       [--scan-file SCAN_FILE] [--gen-report] [-v] [--version]
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -88,22 +87,6 @@ optional arguments:
                         Path to a file to be scanned. Attempt to find a
                         pattern matching with given file.
   --gen-report          Generate an HTML report.
-  --smtp-host SMTP_HOST
-                        SMTP Host. If SMTP settings is set, then a report copy
-                        for the pattern matching process will be sent by
-                        email.
-  --smtp-port SMTP_PORT
-                        SMTP server port.
-  --smtp-ssl            SMTP server require SSL/TLS.
-  --smtp-username SMTP_USERNAME
-                        SMTP account username.
-  --smtp-password SMTP_PASSWORD
-                        SMTP account password.
-  --smtp-from SMTP_FROM
-                        Message sender email to be included in message sender
-                        field.
-  --smtp-recipient SMTP_RECIPIENT
-                        Reports will be sent to this email.
   -v, --verbose         Show more information while processing.
   --version             show program's version number and exit
   ```
@@ -124,7 +107,7 @@ Dot-lab:yara-scanner moath$
 
 * Scan a directory files and attempt to find matching with Yara rules:
 ```
-Dot-lab:yara-scanner moath$ python3 yara_main.py --scan-dir '/var/www/html/webshells/' -verbose --gen-report
+Dot-lab:yara-scanner moath$ python3 yara_main.py --scan-dir '/var/www/html/webshells/' --verbose --gen-report
 [+] Directory scan started
 [+] Getting files path(s) for scan..
 [+] 3 File to process.
