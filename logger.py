@@ -3,7 +3,7 @@ __license__ = "GNU General Public License v2.0"
 __version__ = "1.0"
 __email__ = "moath@vegalayer.com"
 __created__ = "4/Apr/2019"
-__modified__ = "4/Apr/2019"
+__modified__ = "30/Mar/2020"
 __status__ = "Production"
 __project_page__ = "https://github.com/iomoath/yara-scanner"
 
