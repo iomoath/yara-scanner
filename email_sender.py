@@ -7,7 +7,6 @@ from email.mime.base import MIMEBase
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email import encoders
-import os
 import sys
 
 COMMASPACE = ', '
@@ -34,8 +33,8 @@ def send_message(dict_msg_attr):
 
     # List of attachments, dict_msg_attr["attachments"] contains a list of strings.
     # each string will be encoded and attached as a file to the message
-    attachments = dict_msg_attr["attachments"]
-    if attachments is not None:
+    if 'attachments' in dict_msg_attr and  dict_msg_attr["attachments"] is not None:
+        attachments = dict_msg_attr["attachments"]
         for txt_attachments in attachments:
             # Add the attachments to the message
             try:
