@@ -10,7 +10,7 @@ __project_page__ = "https://github.com/iomoath/yara-scanner"
 import logging
 from constants import log_file_path
 
-log_enabled = True
+debug_log_enabled = True
 
 
 logging.basicConfig(filename=log_file_path,
@@ -19,30 +19,30 @@ logging.basicConfig(filename=log_file_path,
                     datefmt="%Y-%m-%d %H:%M:%S")
 
 def log_error(message, module_name):
-    if not log_enabled:
+    if not debug_log_enabled:
         return
     logging.error("({}): {}".format(module_name, message))
 
 
 def log_debug(message, module_name):
-    if not log_enabled:
+    if not debug_log_enabled:
         return
     logging.debug("({}): {}".format(module_name, message))
 
 
 def log_critical(message, module_name):
-    if not log_enabled:
+    if not debug_log_enabled:
         return
     logging.critical("({}): {}".format(module_name, message))
 
 
 def log_warning(message, module_name):
-    if not log_enabled:
+    if not debug_log_enabled:
         return
     logging.warning("({}): {}".format(module_name, message))
 
 
 def log_info(message, module_name):
-    if not log_enabled:
+    if not debug_log_enabled:
         return
     logging.info("({}): {}".format(module_name, message))
