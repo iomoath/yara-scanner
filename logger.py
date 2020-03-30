@@ -9,14 +9,16 @@ __project_page__ = "https://github.com/iomoath/yara-scanner"
 
 import logging
 from settings import debug_log_file_path
-
-debug_log_enabled = True
-
+from settings import debug_log_enabled
+from settings import log_file_path
+from settings import date_time_format
+import common_functions
 
 logging.basicConfig(filename=debug_log_file_path,
-                    level=logging.INFO,
-                    format="%(asctime)s  %(levelname)-10s - %(message)s",
-                    datefmt="%Y-%m-%d %H:%M:%S")
+                    level=logging.DEBUG,
+                    format="%(asctime)s  %(levelname)-8s %(message)s",
+                    datefmt=date_time_format)
+
 
 def log_error(message, module_name):
     if not debug_log_enabled:
@@ -46,3 +48,15 @@ def log_info(message, module_name):
     if not debug_log_enabled:
         return
     logging.info("({}): {}".format(module_name, message))
+
+
+def log_incident(file_path, rules_matched, yara_rules_file_name):
+    try:
+        # Log format: [%time%] "%file_path%" "%rules_matched%" "yara_rules_file_name"
+        log_row = "[{}] \"{}\" \"{}\" \"{}\"".format(common_functions.get_datetime(), file_path, rules_matched, yara_rules_file_name)
+
+        with open(log_file_path, 'a+') as f:
+            f.write(log_row)
+            f.write("\n")
+    except Exception as e:
+        log_critical(e, "logger.py")
