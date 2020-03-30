@@ -33,7 +33,7 @@ $ crontab -e
 0 0 * * */7 python3 /opt/yara-scanner/yara_main.py --update
 ```
 
-For automated scans, This cron will run every week on 3:00 AM and will send scan report to noc@example.org
+For automated scans, This cron will run every week on 3:00 AM
 ```
 0 3 * * */7 python3 /opt/yara-scanner/yara_main.py --scan-dir '/home/xxx/dir' --gen-report --recursive
 ```
