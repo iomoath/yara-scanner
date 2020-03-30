@@ -3,7 +3,7 @@ __license__ = "GNU General Public License v2.0"
 __version__ = "1.0"
 __email__ = "moath@vegalayer.com"
 __created__ = "4/Apr/2019"
-__modified__ = "4/Apr/2019"
+__modified__ = "30/Mar/2020"
 __status__ = "Production"
 __project_page__ = "https://github.com/iomoath/yara-scanner"
 
@@ -12,9 +12,10 @@ import pathlib
 import logger
 import common_functions
 import os
-import constants
+import settings
 import yara
 import access_log_parser
+
 
 module_name = os.path.basename(__file__)
 
@@ -48,7 +49,7 @@ def match(path_list, yara_rules_path_list):
                 logger.log_debug('Attempting to match "{}" with  "{}"'.format(file_path, rule_path), module_name)
                 common_functions.print_verbose(
                     '[+] Attempting to match "{}" with "{}'.format(file_path, os.path.basename(rule_path)))
-                matches = rules.match(file_path, timeout=constants.yara_matching_timeout)
+                matches = rules.match(file_path, timeout=settings.yara_matching_timeout)
                 if len(matches) > 0:
                     record = {"file": file_path, "yara_rules_file": rule_path, "match_list": matches}
                     match_list.append(record)
@@ -56,11 +57,14 @@ def match(path_list, yara_rules_path_list):
                     logger.log_info(
                         'Found {} matches in "{}" {} "{}"'.format(len(matches), file_path, matches, rule_path),
                         module_name)
-                    if constants.verbose_enabled:
+                    if settings.verbose_enabled:
                         print('[*] Found {} matches: {}'.format(len(matches), matches))
                     else:
                         print('[*] Found {} matches in "{}" {} :"{}"'.format(len(matches), file_path, matches,
-                                                                          os.path.basename(rule_path)))
+                                                                      os.path.basename(rule_path)))
+                    logger.log_incident(file_path, matches, rule_path)
+                    common_functions.report_incident_by_email(file_path, matches, rule_path, common_functions.get_datetime())
+
             except Exception as e:
                 print('[-] ERROR: {}'.format(e))
                 logger.log_error(e, module_name)
@@ -81,7 +85,7 @@ def scan_file(file_path):
 
         logger.log_debug('Getting Yara-Rules', module_name)
         common_functions.print_verbose('[+] Getting Yara-Rules..')
-        yara_rule_path_list = get_file_path_list(constants.yara_rules_directory, True, ['*.yar'])
+        yara_rule_path_list = get_file_path_list(settings.yara_rules_directory, True, ['*.yar'])
 
         match_list = match([file_path], yara_rule_path_list)
         print('[+] File scan complete.')
@@ -116,7 +120,7 @@ def scan_directory(directory_path, recursive = False):
 
         logger.log_debug('Getting Yara-Rules', module_name)
         common_functions.print_verbose('[+] Getting Yara-Rules..')
-        yara_rule_path_list = get_file_path_list(constants.yara_rules_directory, True, ['*.yar'])
+        yara_rule_path_list = get_file_path_list(settings.yara_rules_directory, True, ['*.yar'])
         match_list = match(file_path_list, yara_rule_path_list)
 
         print('[+] Directory scan complete.')
@@ -180,7 +184,7 @@ def scan_access_logs(access_logs_file_path, www_dir_path, tail=0):
 
         logger.log_debug('Getting Yara-Rules', module_name)
         common_functions.print_verbose('[+] Getting Yara-Rules..')
-        yara_rule_path_list = get_file_path_list(constants.yara_rules_directory, True, ['*.yar'])
+        yara_rule_path_list = get_file_path_list(settings.yara_rules_directory, True, ['*.yar'])
         match_list = match(file_path_set, yara_rule_path_list)
 
         print('[+] Access logs scan complete.')
