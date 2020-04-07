@@ -15,7 +15,7 @@ from settings import date_time_format
 import common_functions
 
 logging.basicConfig(filename=debug_log_file_path,
-                    level=logging.DEBUG,
+                    level=logging.INFO,
                     format="%(asctime)s  %(levelname)-8s %(message)s",
                     datefmt=date_time_format)
 
