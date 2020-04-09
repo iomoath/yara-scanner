@@ -1,14 +1,18 @@
 # YaraScanner
 
-Yara scanner tool uses Yara rules to check for pattern matching with file(s). The default rules used are from repo [Yara-Rules](https://github.com/Yara-Rules/rules).
+Yara scanner tool uses Yara rules to check for pattern matching with file(s).
 
 Features:
-* Scan a directoy. Scan for file(s) in given directory path and attempt to find a pattern matching with Yara-Rules.
-* Scan web access logs. By getting list of accessed file paths from access logs and attempt to find a pattern matching with Yara Rules.
-* Scan a single file. Attempt to find a pattern matching with given file.
-* Report producing upon scan process completion.
-* Delivering scan report by email.
-* Logging.
+[+] Scan a single file. Attempt to find a pattern matching with given file.
+[+] Scan a directory. Scan for file(s) in given directory path and attempt to find a pattern matching with Yara-Rules.
+[+] Scan web access logs. By getting list of accessed file paths from access logs and attempt to find a pattern matching with Yara Rules.
+[+] Auto fetch and compile Yara-Rules from [Yara-Rules](https://github.com/Yara-Rules/rules)
+[+] Flexibility, using custom Yara rules
+[+] HTML scan reports
+[+] Deliver reports by email
+[+] Email alerts, when a pattern match is found
+[+] Logging.
+
 
 
 ### Prerequisites
