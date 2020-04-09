@@ -2,7 +2,7 @@
 
 Yara scanner tool uses Yara rules to check for pattern matching with file(s).
 
-Features:
+### Features
 [+] Scan a single file. Attempt to find a pattern matching with given file.
 [+] Scan a directory. Scan for file(s) in given directory path and attempt to find a pattern matching with Yara-Rules.
 [+] Scan web access logs. By getting list of accessed file paths from access logs and attempt to find a pattern matching with Yara Rules.
