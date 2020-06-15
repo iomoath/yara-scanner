@@ -46,6 +46,10 @@ def match(path_list, yara_rules_path_list):
                 rule_path = rule_path.absolute().as_posix()
                 rules = yara.load(rule_path)
 
+                file_size = os.path.getsize(file_path)
+                if(file_size > settings.max_file_size):
+                    continue
+
                 logger.log_debug('Attempting to match "{}" with  "{}"'.format(file_path, rule_path), module_name)
                 common_functions.print_verbose(
                     '[+] Attempting to match "{}" with "{}'.format(file_path, os.path.basename(rule_path)))
