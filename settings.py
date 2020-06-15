@@ -6,6 +6,7 @@ yara_rules_repo_download_url = yara_rules_repo_url + '/archive/master.zip'
 yara_rules_zipped_name = 'yara-rules.zip'
 yara_rules_directory_name_in_zip = 'rules-master'
 yara_matching_timeout = 30 # timeout in seconds
+max_file_size = 6777216 # Max file size 16 MB
 debug_log_enabled = False
 debug_log_file_path = 'debug.log'
 log_file_path = 'matches.log'
