@@ -52,7 +52,7 @@ def run_scanner(args):
         print('[+] Report saved to "{}"'.format(report_file_name))
 
     # send report by email
-    if args['gen_report'] and settings.smtp_host is not None and settings.smtp_port > 0:
+    if args['gen_report'] and len(settings.smtp_host) > 0 and settings.smtp_port > 0:
         report = report_generator.generate_report(match_result)
 
         attachment = [{'text': report, 'file_name': report_file_name}]
