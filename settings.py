@@ -11,15 +11,12 @@ debug_log_file_path = 'debug.log'
 log_file_path = 'matches.log'
 verbose_enabled = False
 
-# If enabled, report scan results will saved to current YaraScanner directory
-generate_report_file = False
-
 # time format used across modules [logging, alerts]
 date_time_format = '%Y-%m-%d %H:%M:%S'
 ################ Email Alerts settings ################
 email_alerts_enabled = False
-smtp_host = "smtp.gmail.com"
-smtp_port = 587
+smtp_host = ""
+smtp_port = 25
 
 # SMTP server require SSL/TLS ?
 smtp_ssl = True
