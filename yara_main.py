@@ -46,7 +46,7 @@ def run_scanner(args):
     if args['gen_report']:
         print('[+] Generating report..')
 
-    if args['gen_report'] and settings.generate_report_file:
+    if args['gen_report']:
         report = report_generator.generate_report(match_result)
         common_functions.write_to_file(report_file_name, report)
         print('[+] Report saved to "{}"'.format(report_file_name))
