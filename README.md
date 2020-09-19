@@ -1,5 +1,7 @@
 # YaraScanner
 
+Hunt the unknown!
+
 Yara scanner tool uses Yara rules to check for pattern matching with file(s).
 
 ### Features
