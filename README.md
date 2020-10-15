@@ -1,6 +1,8 @@
 # YaraScanner
 
-Yara scanner tool uses Yara rules to check for pattern matching with file(s).
+Hunt the unknown!
+
+YaraScanner is a threat hunting tool, based on Yara Rules. 
 
 ### Features
 * Scan a single file. Attempt to find a pattern matching with given file.
