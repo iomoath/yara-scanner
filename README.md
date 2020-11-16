@@ -1,4 +1,5 @@
-# YaraScanner
+# Yara Scanner
+#### yara-scanner
 
 Hunt the unknown!
 
