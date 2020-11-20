@@ -45,13 +45,12 @@ For automated scans, This cron will run every week on 3:00 AM
 ```
 
 
-## Installation on Windows
+## Installing on Windows Systems
 The tool has been tested with Python 3.7
 
 1. Download & Install Python 3.7 and make sure to check the option “Add Python to PATH”
 2. Open a new CMD console, and run the command ```pip install yara-python```
-3. Install ```yara-python``` library. ```pip install yara-python```
-4. Update Yara rules:  ``` python yara_main.py --update```
+3. Update Yara rules:  ``` python yara_main.py --update```
 
 
 At this step, YaraScanner is ready to use with default setup.
