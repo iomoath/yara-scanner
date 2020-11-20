@@ -26,7 +26,7 @@ YaraScanner is a simple threat hunting & IOC scanner tool. Yara rules based.
 ## Installing
 
 1. Clone or download the project files.
-2. Install ```yara-python``` library if it is not installed on your system. ```pip3 install yara-python```
+2. Install ```yara-python``` library. ```pip3 install yara-python```
 3. Open ```settings.py``` in any text editor and adjust settings if you need to change the default settings.
 4. Update Yara rules:  ``` python3 yara_main.py --update```
 5. (Optinal) Create a cron in your system cron manager to run the yara scanner and updater.
@@ -48,10 +48,10 @@ For automated scans, This cron will run every week on 3:00 AM
 ## Installation on Windows
 The tool has been tested with Python 3.7
 
-1. Download & Install Python 3.7 from this link. Make sure to check the option “Add Python to PATH”
+1. Download & Install Python 3.7 and make sure to check the option “Add Python to PATH”
 2. Open a new CMD console, and run the command ```pip install yara-python```
-4. Update Yara rules:  ``` python3 yara_main.py --update```
-
+3. Install ```yara-python``` library. ```pip install yara-python```
+4. Update Yara rules:  ``` python yara_main.py --update```
 
 
 At this step, YaraScanner is ready to use with default setup.
