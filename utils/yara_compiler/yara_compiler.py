@@ -1,10 +1,4 @@
 __author__ = "Moath Maharmeh"
-__license__ = "GNU General Public License v2.0"
-__version__ = "1.0"
-__email__ = "moath@vegalayer.com"
-__created__ = "4/Apr/2019"
-__modified__ = "4/Apr/2019"
-__status__ = "Production"
 __project_page__ = "https://github.com/iomoath/yara-scanner"
 
 import os
@@ -44,9 +38,12 @@ def get_file_list_in_dir(dir_path, recursive, filters = None):
 def compile_yara_rules(yara_rule_path_list, save_directory):
     for path in yara_rule_path_list:
 
-        save_path = os.path.join(save_directory, os.path.basename(path))
-        compiled = yara.compile(filepath=path, includes=True)
-        compiled.save(save_path)
+        try:
+            save_path = os.path.join(save_directory, os.path.basename(path))
+            compiled = yara.compile(filepath=path, includes=True)
+            compiled.save(save_path)
+        except Exception as e:
+            print("[-] Could not compile the file {}. {}".format(path, e))
 
 
 file_list = get_file_list_in_dir(source_directory, False, ['*.yar'])
