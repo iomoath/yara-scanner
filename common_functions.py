@@ -1,10 +1,4 @@
 __author__ = "Moath Maharmeh"
-__license__ = "GNU General Public License v2.0"
-__version__ = "1.0"
-__email__ = "moath@vegalayer.com"
-__created__ = "4/Apr/2019"
-__modified__ = "30/Mar/2020"
-__status__ = "Production"
 __project_page__ = "https://github.com/iomoath/yara-scanner"
 
 import os
@@ -105,9 +99,14 @@ def extract_zip(zip_file_path, directory_to_extract_to):
 def compile_yara_rules(yara_rule_path_list, save_directory):
     for path in yara_rule_path_list:
 
-        save_path = os.path.join(save_directory, os.path.basename(path))
-        compiled = yara.compile(filepath=path, includes=True)
-        compiled.save(save_path)
+        try:
+            save_path = os.path.join(save_directory, os.path.basename(path))
+            compiled = yara.compile(filepath=path, includes=True)
+            compiled.save(save_path)
+        except Exception as e:
+            if settings.verbose_enabled:
+                print("[-] Could not compile the file {}. {}".format(path, e))
+
 
 def write_to_file(file_path, content):
     with open(file_path, mode='w') as file:
