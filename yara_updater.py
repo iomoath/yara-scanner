@@ -1,10 +1,4 @@
 __author__ = "Moath Maharmeh"
-__license__ = "GNU General Public License v2.0"
-__version__ = "1.0"
-__email__ = "moath@vegalayer.com"
-__created__ = "4/Apr/2019"
-__modified__ = "30/Mar/2020"
-__status__ = "Production"
 __project_page__ = "https://github.com/iomoath/yara-scanner"
 
 import os
@@ -16,11 +10,12 @@ import settings
 module_name = os.path.basename(__file__)
 
 
-# More rules can be added, checkout Yara-Rule Repo at https://github.com/Yara-Rules/rules
-yara_rules_file_list = [
-    'webshells_index.yar',
-    'exploit_kits_index.yar',
-    'suspicious_strings.yar'
+# Excluded rules that causes cause errors stating an undefined identifier, as stated in https://github.com/Neo23x0/signature-base#external-variables-in-yara-rules
+excluded_rules_file_list = [
+    'generic_anomalies.yar',
+    'general_cloaking.yar',
+    'thor_inverse_matches.yar',
+    'yara_mixed_ext_vars.yar'
 ]
 
 
@@ -42,19 +37,25 @@ def find_yara_files():
     Search for Yara-Rules files path(s) defined in given list within directory $tmp_directory/rules-master
     :return: List contains yara rules path(s)
     """
-    yara_rule_path_list = []
+    rule_path_list = []
 
-    for r in yara_rules_file_list:
-        yara_rule_path = common_functions.find_files(r, os.path.join(settings.tmp_directory, settings.yara_rules_directory_name_in_zip))
-        if yara_rule_path is not None:
-            yara_rule_path_list.append(yara_rule_path)
+    rules_dir_absolute_path = os.path.abspath(os.path.join(settings.tmp_directory, settings.yara_rules_directory_name_in_zip))
+    file_list = common_functions.get_file_set_in_dir(rules_dir_absolute_path, True)
 
-    return yara_rule_path_list
+    for file_path in file_list:
+        file_name = os.path.basename(file_path)
+        if file_name in excluded_rules_file_list:
+            continue
+
+        rule_path_list.append(file_path)
+
+    return rule_path_list
 
 
 
 def clean_up():
     common_functions.delete_directory_content(settings.tmp_directory)
+
 
 
 def update():
