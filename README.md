@@ -1,15 +1,15 @@
 # Yara Scanner
 #### yara-scanner
 
-Hunt the unknown!
+YaraScanner is a simple threat hunting & IOC scanner tool. Yara rules based.
 
-YaraScanner is a threat hunting tool, based on Yara Rules. 
+
 
 ### Features
 * Scan a single file. Attempt to find a pattern matching with given file.
-* Scan a directory. Scan for file(s) in given directory path and attempt to find a pattern matching with Yara-Rules.
+* Scan a directory. Scan for file(s) in given directory path and attempt to find a pattern matching with Yara rules.
 * Scan web access logs. By getting list of accessed file paths from access logs and attempt to find a pattern matching with Yara Rules.
-* Auto fetch and compile Yara-Rules from [Yara-Rules](https://github.com/Yara-Rules/rules)
+* Auto fetch Yara rules from [Neo23x0](https://github.com/Neo23x0/signature-base)
 * Flexibility, using custom Yara rules
 * HTML scan reports
 * Deliver reports by email
@@ -27,10 +27,9 @@ YaraScanner is a threat hunting tool, based on Yara Rules.
 
 1. Clone or download the project files.
 2. Install ```yara-python``` library if it is not installed on your system. ```pip3 install yara-python```
-3. Adjust your settings in settings.py
-4. Update project Yara rules:  ``` python3 yara-scanner/yara_main.py --update```
-5. Create a cron in your system cron manager to run the yara scanner and updater.
-
+3. Open ```settings.py``` in any text editor and adjust settings if you need to change the default settings.
+4. Update Yara rules:  ``` python3 yara_main.py --update```
+5. (Optinal) Create a cron in your system cron manager to run the yara scanner and updater.
 The following cron will run on 12:00 AM every week, and update yara-rules. Adjust as your requirements.
 
 ```
@@ -45,23 +44,22 @@ For automated scans, This cron will run every week on 3:00 AM
 0 3 * * */7 python3 /opt/yara-scanner/yara_main.py --scan-dir '/home/xxx/dir' --gen-report --recursive
 ```
 
-At this step, YaraScanner is ready to use with basic setup. By default the following Yara rules are used 
 
-```Webshells_index.yar```, ```Exploit-Kits_index.yar```
+## Installation on Windows
+The tool has been tested with Python 3.7
 
-#### Steps for enabling more Yara rules:
-1. Go to  [Yara-Rules](https://github.com/Yara-Rules/rules) repo and get the rules files names you are intrested in.
-2. Edit the file ```yara-scanner/yara_updater.py``` and then add the files names to the list ```yara_rules_file_list```
-3. Save the file and yara updater   ``` python3 yara-scanner/yara_main.py --update```
+1. Download & Install Python 3.7 from this link. Make sure to check the option “Add Python to PATH”
+2. Open a new CMD console, and run the command ```pip install yara-python```
+4. Update Yara rules:  ``` python3 yara_main.py --update```
 
 
-#### Adding custom Yara rules other than Yara-Rules repo
-If you have the rules compiled already, you can simply place them into the directory ```yara-rules``` 
-However, if you have rules that needs to be compiled, there's the steps:
-1. Place the source rules files in the directory ```yara-scanner/utils/yara_compiler/source/```
-2. Run the compiler script ```python3 yara-scanner/utils/yara_compiler/yara_compiler.py```
-3. Complied rules will be saved into the directory ```yara-scanner/utils/yara_compiler/compiled/```
-4. After compling the rules, move the complied rules to the directory ```yara-rules```
+
+At this step, YaraScanner is ready to use with default setup.
+
+
+#### Steps for adding more Yara rules:
+* Compiled rules should be placed under "yara-rules" directory.
+* Source rules files should be placed under "yara-rules-src" directory.
 
 
 ## Arugments
@@ -98,13 +96,14 @@ optional arguments:
   --version             show program's version number and exit
   ```
 
+
 ## Usage example
 
 * Attempt to find a matching with a single file:
 ```
 Dot-lab:yara-scanner moath$ python3 yara_main.py --scan-file '/var/www/html/head.php' --verbose
 [+] Single file scan started
-[+] Getting Yara-Rules..
+[+] Getting Yara Rules..
 [+] Attempting to match "/var/www/html/webshells/backupsql.php" with "Webshells_index.yar
 [+] Attempting to match "/var/www/html/webshells/backupsql.php" with "Exploit-Kits_index.yar
 [*] Found 6 matches: [backupsql_php_often_with_c99shell, Dx_php_php, Moroccan_Spamers_Ma_EditioN_By_GhOsT_php, mysql_php_php, mysql_tool_php_php, WebShell_backupsql]
@@ -158,12 +157,19 @@ Dot-lab:yara-scanner$
 ```
 
 
-## License
+
+
+
+### Project License
 
 This project is licensed under the GNU General Public License v2.0 - see the [LICENSE](LICENSE) file for details
 
 
-## Meta
+### Signature-Base License
+This project uses yara rules from [Neo23x0](https://github.com/Neo23x0/signature-base) repository and, it's licensed except the YARA rules created by 3rd parties, are licensed under the [Creative Commons Attribution-NonCommercial 4.0 International License](http://creativecommons.org/licenses/by-nc/4.0/).
+
+
+### Meta
 Moath Maharmeh - [@iomoaaz](https://twitter.com/iomoaaz) - moath@vegalayer.com
 
 https://github.com/iomoath/yara-scanner
