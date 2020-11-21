@@ -58,7 +58,7 @@ At this step, YaraScanner is ready to use with default setup.
 
 #### Steps for adding more Yara rules:
 * Compiled rules should be placed under "yara-rules" directory.
-* Source rules files should be placed under "yara-rules-src" directory.
+* Place un-compiled rules source codes files should be placed under "yara-rules-src" directory and, it will be automatically compiled at runtime.
 
 
 ## Arugments
