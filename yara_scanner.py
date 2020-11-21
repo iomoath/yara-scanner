@@ -77,6 +77,8 @@ def scan_file(file_path):
         print('[-] ERROR: {}'.format(msg))
         raise Exception(msg)
 
+    # Check if there are any rules in yara-rules-src dir and compile them
+    common_functions.compile_yara_rules_src_dir()
     try:
         logger.log_info('Single file scan started', module_name)
         print('[+] Single file scan started')
@@ -103,6 +105,9 @@ def scan_directory(directory_path, recursive = False):
         logger.log_error(msg, module_name)
         print('[-] ERROR: {}'.format(msg))
         raise Exception(msg)
+
+    # Check if there are any rules in yara-rules-src dir and compile them
+    common_functions.compile_yara_rules_src_dir()
 
     try:
         logger.log_info('Directory scan started', module_name)
@@ -158,6 +163,9 @@ def scan_access_logs(access_logs_file_path, www_dir_path, tail=0):
             logger.log_error('The provided path "{}" is invalid '.format(access_logs_file_path), module_name)
             print('[-] ERROR: The provided path "{}" is invalid.'.format(access_logs_file_path))
             return None
+
+        # Check if there are any rules in yara-rules-src dir and compile them
+        common_functions.compile_yara_rules_src_dir()
 
         logger.log_info('Access logs scan started', module_name)
         print('[+] Access logs scan started')
