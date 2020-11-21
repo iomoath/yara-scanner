@@ -5,7 +5,7 @@ tmp_directory = 'tmp'
 yara_rules_directory = 'yara-rules'
 
 # Uncompiled rules directory (Src). Yara rules in this diectory will be compiled automatically when start
-yara_rules_src_directory = 'yara-rules-rc'
+yara_rules_src_directory = 'yara-rules-src'
 
 yara_rules_repo_url = 'https://github.com/Neo23x0/signature-base'
 yara_rules_repo_download_url = yara_rules_repo_url + '/archive/master.zip'
