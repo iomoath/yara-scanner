@@ -108,6 +108,15 @@ def compile_yara_rules(yara_rule_path_list, save_directory):
                 print("[-] Could not compile the file {}. {}".format(path, e))
 
 
+def compile_yara_rules_src_dir():
+    dir = os.path.abspath(settings.yara_rules_src_directory)
+    path_list = get_file_set_in_dir(dir, True, "*.yar")
+    if get_file_set_in_dir is None or len(path_list) < 1:
+        return
+
+    compile_yara_rules(path_list, settings.yara_rules_directory)
+
+
 def write_to_file(file_path, content):
     with open(file_path, mode='w') as file:
         file.write(content)
