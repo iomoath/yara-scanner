@@ -1,1 +1,1 @@
-Yara compiled rules should be in this directory
+Compiled rules should be in this directory
