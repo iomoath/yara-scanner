@@ -34,10 +34,14 @@ def match(path_list, yara_rules_path_list):
     for file_path in path_list:
         if type(file_path) is pathlib.PosixPath:
             file_path = file_path.absolute().as_posix()
+
         for rule_path in yara_rules_path_list:
             try:
                 logger.log_debug('Loading rules from {}'.format(rule_path), module_name)
-                rule_path = rule_path.absolute().as_posix()
+
+                if type(rule_path) is pathlib.PosixPath:
+                    rule_path = rule_path.absolute().as_posix()
+
                 rules = yara.load(rule_path)
 
                 file_size = os.path.getsize(file_path)
@@ -85,7 +89,7 @@ def scan_file(file_path):
 
         logger.log_debug('Getting Yara-Rules', module_name)
         common_functions.print_verbose('[+] Getting Yara-Rules..')
-        yara_rule_path_list = get_file_path_list(settings.yara_rules_directory, True, ['*.yar'])
+        yara_rule_path_list = get_file_path_list(settings.yara_rules_directory, True, '*.yar')
 
         match_list = match([file_path], yara_rule_path_list)
         print('[+] File scan complete.')
@@ -116,14 +120,14 @@ def scan_directory(directory_path, recursive = False):
 
         logger.log_debug('Getting files path(s) for scan', module_name)
         common_functions.print_verbose('[+] Getting files path(s) for scan..')
-        file_path_list = get_file_path_list(directory_path, recursive, ['*.*', '*'])
+        file_path_list = get_file_path_list(directory_path, recursive, '*')
 
         logger.log_debug('[+] {} File to process'.format(len(file_path_list)), module_name)
         print('[+] {} File to process.'.format(len(file_path_list)))
 
         logger.log_debug('Getting Yara-Rules', module_name)
         common_functions.print_verbose('[+] Getting Yara-Rules..')
-        yara_rule_path_list = get_file_path_list(settings.yara_rules_directory, True, ['*.yar'])
+        yara_rule_path_list = get_file_path_list(settings.yara_rules_directory, True, '*.yar')
         match_list = match(file_path_list, yara_rule_path_list)
 
         print('[+] Directory scan complete.')
@@ -190,7 +194,7 @@ def scan_access_logs(access_logs_file_path, www_dir_path, tail=0):
 
         logger.log_debug('Getting Yara-Rules', module_name)
         common_functions.print_verbose('[+] Getting Yara-Rules..')
-        yara_rule_path_list = get_file_path_list(settings.yara_rules_directory, True, ['*.yar'])
+        yara_rule_path_list = get_file_path_list(settings.yara_rules_directory, True, '*.yar')
         match_list = match(file_path_set, yara_rule_path_list)
 
         print('[+] Access logs scan complete.')
