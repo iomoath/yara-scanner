@@ -12,6 +12,7 @@ import yara
 import settings
 from datetime import datetime
 import email_sender
+import fnmatch
 
 
 module_name = os.path.basename(__file__)
@@ -31,17 +32,20 @@ def get_file_set_in_dir(dir_path, files_only, filters = None):
     :param filters: file extensions: example ['*', '*.*', '*.txt']
     :return: Set of files that matches given filters
     """
+
+    root_dir_path = u"{}".format(dir_path)
+
     file_path_set = set()
     if filters is None:
-        filters = ['*']
+        filters = '*'
 
-    for f in filters:
-        for path in glob.glob(os.path.join(dir_path, f)):
-            if files_only:
-                if os.path.isfile(path):
-                    file_path_set.add(path)
-            else:
+    for path in glob.glob(os.path.join(root_dir_path, filters)):
+        if files_only:
+            if os.path.isfile(path):
                 file_path_set.add(path)
+        else:
+            file_path_set.add(path)
+
     return file_path_set
 
 
@@ -51,21 +55,25 @@ def recursive_file_scan(root_dir_path, files_only, filters):
     Scan for files and directories recursively in a given directory path
     :param root_dir_path: directory path
     :param files_only: If set to False then will get files and directories list. True will get only files list in given directory path
-    :param filters: file extensions: example ['*', '*.*', '*.txt']
+    :param filters: file extensions: example ['*.txt']
     :return: Set of files that matches given filters
     """
+    root_dir_path = u"{}".format(root_dir_path)
     file_path_set = set()
 
-    if filters is None:
-        filters = ['*']
+    if filters is None or filters == "":
+        filters = '*'
 
-    for f in filters:
-        for path in Path(root_dir_path).glob('**/{}'.format(f)):
+    for root, dirnames, filenames in os.walk(root_dir_path):
+        for filename in fnmatch.filter(filenames, filters):
+            file_path = os.path.join(root, filename)
+
             if files_only:
-                if os.path.isfile(path):
-                    file_path_set.add(path)
-            else:
-                file_path_set.add(path)
+                if not os.path.isfile(file_path):
+                    continue
+
+            file_path_set.add(file_path)
+
     return file_path_set
 
 
@@ -109,10 +117,13 @@ def compile_yara_rules(yara_rule_path_list, save_directory):
 
 
 def compile_yara_rules_src_dir():
+
     dir = os.path.abspath(settings.yara_rules_src_directory)
     path_list = get_file_set_in_dir(dir, True, "*.yar")
+
     if get_file_set_in_dir is None or len(path_list) < 1:
         return
+
 
     compile_yara_rules(path_list, settings.yara_rules_directory)
 
