@@ -53,15 +53,20 @@ def match(path_list, yara_rules_path_list):
                 common_functions.print_verbose('[+] Attempting to match "{}" with "{}'.format(file_path, os.path.basename(rule_path)))
 
                 # Attempt to match
-                matches = rules.match(file_path, timeout=settings.yara_matching_timeout)
+
+                # Check if file path contain non-ascii chars, as it's will cause error in Windows env
+                is_ascii_path = common_functions.is_ascii(file_path)
+                if not is_ascii_path and os.name == 'nt':
+                    with open(file_path, 'rb') as f:
+                        matches = rules.match(data=f.read(), timeout=settings.yara_matching_timeout)
+                else:
+                    matches = rules.match(file_path, timeout=settings.yara_matching_timeout)
 
                 if len(matches) > 0:
                     record = {"file": file_path, "yara_rules_file": rule_path, "match_list": matches}
                     match_list.append(record)
 
-                    logger.log_info(
-                        'Found {} matches in "{}" {} "{}"'.format(len(matches), file_path, matches, rule_path),
-                        module_name)
+                    logger.log_info('Found {} matches in "{}" {} "{}"'.format(len(matches), file_path, matches, rule_path), module_name)
                     if settings.verbose_enabled:
                         print('[*] Found {} matches: {}'.format(len(matches), matches))
                     else:
