@@ -24,6 +24,10 @@ def find_files(name, path):
             return full_path
 
 
+def is_ascii(s):
+    return all(ord(c) < 128 for c in s)
+
+
 def get_file_set_in_dir(dir_path, files_only, filters = None):
     """
     Scan for files in a given directory path
@@ -134,7 +138,7 @@ def compile_yara_rules_src_dir():
 
 
 def write_to_file(file_path, content):
-    with open(file_path, mode='w') as file:
+    with open(file_path, mode='w', encoding='utf8') as file:
         file.write(content)
 
 def print_verbose(msg):
@@ -150,6 +154,7 @@ def open_file(file_path):
         print('[-] ERROR {}'.format(e))
         logger.log_error(e, module_name)
         return None
+
 
 def close_file(file_stream):
     try:
