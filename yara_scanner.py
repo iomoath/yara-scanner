@@ -10,7 +10,6 @@ import settings
 import yara
 import access_log_parser
 
-
 module_name = os.path.basename(__file__)
 
 
@@ -31,6 +30,7 @@ def match(path_list, yara_rules_path_list):
     # Store matches found
     match_list = []
 
+
     for file_path in path_list:
         if type(file_path) is pathlib.PosixPath:
             file_path = file_path.absolute().as_posix()
@@ -45,13 +45,16 @@ def match(path_list, yara_rules_path_list):
                 rules = yara.load(rule_path)
 
                 file_size = os.path.getsize(file_path)
-                if(file_size > settings.max_file_size):
+
+                if file_size > settings.max_file_size:
                     continue
 
                 logger.log_debug('Attempting to match "{}" with  "{}"'.format(file_path, rule_path), module_name)
-                common_functions.print_verbose(
-                    '[+] Attempting to match "{}" with "{}'.format(file_path, os.path.basename(rule_path)))
+                common_functions.print_verbose('[+] Attempting to match "{}" with "{}'.format(file_path, os.path.basename(rule_path)))
+
+                # Attempt to match
                 matches = rules.match(file_path, timeout=settings.yara_matching_timeout)
+
                 if len(matches) > 0:
                     record = {"file": file_path, "yara_rules_file": rule_path, "match_list": matches}
                     match_list.append(record)
@@ -67,6 +70,13 @@ def match(path_list, yara_rules_path_list):
                     logger.log_incident(file_path, matches, rule_path)
                     common_functions.report_incident_by_email(file_path, matches, rule_path, common_functions.get_datetime())
 
+            except yara.Error as e:
+                print('[-] ERROR: {}'.format(e))
+                logger.log_error(e, module_name)
+
+                if 'could not open file' in str(e):
+                    break
+
             except Exception as e:
                 print('[-] ERROR: {}'.format(e))
                 logger.log_error(e, module_name)
@@ -75,6 +85,8 @@ def match(path_list, yara_rules_path_list):
 
 
 def scan_file(file_path):
+    file_path = u"{}".format(file_path)
+
     if file_path is None or not os.path.isfile(file_path):
         msg = "The provided path '{}' is invalid.".format(file_path)
         logger.log_error(msg, module_name)
@@ -104,6 +116,8 @@ def scan_file(file_path):
 
 def scan_directory(directory_path, recursive = False):
 
+    directory_path = u"{}".format(directory_path)
+
     if directory_path is None or not os.path.isdir(directory_path):
         msg = "The provided path '{}' is invalid.".format(directory_path)
         logger.log_error(msg, module_name)
@@ -128,6 +142,7 @@ def scan_directory(directory_path, recursive = False):
         logger.log_debug('Getting Yara-Rules', module_name)
         common_functions.print_verbose('[+] Getting Yara-Rules..')
         yara_rule_path_list = get_file_path_list(settings.yara_rules_directory, True, '*.yar')
+
         match_list = match(file_path_list, yara_rule_path_list)
 
         print('[+] Directory scan complete.')
