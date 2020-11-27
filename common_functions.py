@@ -3,7 +3,6 @@ __project_page__ = "https://github.com/iomoath/yara-scanner"
 
 import os
 import glob
-from pathlib import Path
 import zipfile
 import urllib.request
 import shutil
@@ -21,7 +20,8 @@ module_name = os.path.basename(__file__)
 def find_files(name, path):
     for root, dirs, files in os.walk(path):
         if name in files:
-            return os.path.join(root, name)
+            full_path = u"{}".format(os.path.join(root, name))
+            return full_path
 
 
 def get_file_set_in_dir(dir_path, files_only, filters = None):
@@ -40,6 +40,8 @@ def get_file_set_in_dir(dir_path, files_only, filters = None):
         filters = '*'
 
     for path in glob.glob(os.path.join(root_dir_path, filters)):
+        path = u"{}".format(path)
+
         if files_only:
             if os.path.isfile(path):
                 file_path_set.add(path)
@@ -67,6 +69,7 @@ def recursive_file_scan(root_dir_path, files_only, filters):
     for root, dirnames, filenames in os.walk(root_dir_path):
         for filename in fnmatch.filter(filenames, filters):
             file_path = os.path.join(root, filename)
+            file_path = u"{}".format(file_path)
 
             if files_only:
                 if not os.path.isfile(file_path):
@@ -74,14 +77,16 @@ def recursive_file_scan(root_dir_path, files_only, filters):
 
             file_path_set.add(file_path)
 
-    return file_path_set
 
+    return file_path_set
 
 
 
 def delete_directory_content(dir_path):
     for file in os.listdir(dir_path):
         file_path = os.path.join(dir_path, file)
+        file_path = u"{}".format(file_path)
+
         try:
             if os.path.isfile(file_path):
                 os.unlink(file_path)
