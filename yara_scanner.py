@@ -78,13 +78,15 @@ def match(path_list, yara_rules_path_list):
             except yara.Error as e:
                 print('[-] ERROR: {}'.format(e))
                 logger.log_error(e, module_name)
-
                 if 'could not open file' in str(e):
                     break
 
             except Exception as e:
                 print('[-] ERROR: {}'.format(e))
                 logger.log_error(e, module_name)
+
+                if 'The system cannot find the file specified' in str(e):
+                    break
 
     return match_list
 
