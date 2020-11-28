@@ -44,6 +44,8 @@ def should_exclude(path):
         if path.lower().endswith(ext):
             return True
 
+    return False
+
 def get_file_set_in_dir(dir_path, files_only, filters = None):
     """
     Scan for files in a given directory path
