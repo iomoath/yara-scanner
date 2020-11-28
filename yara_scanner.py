@@ -38,6 +38,11 @@ def match(path_list, yara_rules_path_list):
         if not os.path.isfile(file_path):
             continue
 
+        dir_path = os.path.dirname(os.path.realpath(file_path))
+
+        if dir_path in settings.excluded_path_list:
+            continue
+
         for rule_path in yara_rules_path_list:
             try:
                 logger.log_debug('Loading rules from {}'.format(rule_path), module_name)
