@@ -12,7 +12,7 @@ import settings
 from datetime import datetime
 import email_sender
 import fnmatch
-
+import exclude
 
 module_name = os.path.basename(__file__)
 
@@ -24,9 +24,25 @@ def find_files(name, path):
             return full_path
 
 
+def path_is_parent(parent_path, child_path):
+    parent_path = os.path.abspath(parent_path)
+    child_path = os.path.abspath(child_path)
+    return os.path.commonpath([parent_path]) == os.path.commonpath([parent_path, child_path])
+
+
 def is_ascii(s):
     return all(ord(c) < 128 for c in s)
 
+
+def should_exclude(path):
+    for p in exclude.excluded_path_list:
+        if path_is_parent(p, path):
+            return True
+
+    # Check file extension
+    for ext in exclude.excluded_file_extensions:
+        if path.lower().endswith(ext):
+            return True
 
 def get_file_set_in_dir(dir_path, files_only, filters = None):
     """
