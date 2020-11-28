@@ -1,6 +1,3 @@
-import os
-
-
 ################ Internal settings, usually remains the same! ################
 tmp_directory = 'tmp'
 
@@ -23,14 +20,6 @@ verbose_enabled = False
 
 # time format used across modules [logging, alerts]
 date_time_format = '%Y-%m-%d %H:%M:%S'
-
-
-################ Excluded paths from scan ################
-excluded_path_list = []
-
-# Exclude yara rules directory path by default
-yara_rules_dir = os.path.join(os.getcwd(), yara_rules_directory)
-excluded_path_list.append(yara_rules_dir)
 
 ################ Email Alerts settings ################
 email_alerts_enabled = False
