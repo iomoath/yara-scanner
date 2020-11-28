@@ -35,6 +35,9 @@ def match(path_list, yara_rules_path_list):
         if type(file_path) is pathlib.PosixPath:
             file_path = file_path.absolute().as_posix()
 
+        if not os.path.isfile(file_path):
+            continue
+
         for rule_path in yara_rules_path_list:
             try:
                 logger.log_debug('Loading rules from {}'.format(rule_path), module_name)
@@ -84,9 +87,6 @@ def match(path_list, yara_rules_path_list):
             except Exception as e:
                 print('[-] ERROR: {}'.format(e))
                 logger.log_error(e, module_name)
-
-                if 'The system cannot find the file specified' in str(e):
-                    break
 
     return match_list
 
