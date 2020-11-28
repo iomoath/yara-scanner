@@ -1,3 +1,5 @@
+import exclude
+
 __author__ = "Moath Maharmeh"
 __project_page__ = "https://github.com/iomoath/yara-scanner"
 
@@ -38,10 +40,9 @@ def match(path_list, yara_rules_path_list):
         if not os.path.isfile(file_path):
             continue
 
-        dir_path = os.path.dirname(os.path.realpath(file_path))
-
-        if dir_path in settings.excluded_path_list:
+        if common_functions.should_exclude(file_path):
             continue
+
 
         for rule_path in yara_rules_path_list:
             try:
@@ -84,13 +85,13 @@ def match(path_list, yara_rules_path_list):
                     common_functions.report_incident_by_email(file_path, matches, rule_path, common_functions.get_datetime())
 
             except yara.Error as e:
-                print('[-] ERROR: {}'.format(e))
+                common_functions.print_verbose('[-] ERROR: {}'.format(e))
                 logger.log_error(e, module_name)
                 if 'could not open file' in str(e):
                     break
 
             except Exception as e:
-                print('[-] ERROR: {}'.format(e))
+                common_functions.print_verbose('[-] ERROR: {}'.format(e))
                 logger.log_error(e, module_name)
 
     return match_list
@@ -121,7 +122,7 @@ def scan_file(file_path):
         return match_list
 
     except Exception as e:
-        print('[-] ERROR: {}'.format(e))
+        common_functions.print_verbose('[-] ERROR: {}'.format(e))
         logger.log_error(e, module_name)
         raise
 
@@ -163,7 +164,7 @@ def scan_directory(directory_path, recursive = False):
         return match_list
 
     except Exception as e:
-        print('[-] ERROR: {}'.format(e))
+        common_functions.print_verbose('[-] ERROR: {}'.format(e))
         logger.log_error(e, module_name)
         raise
 
@@ -230,7 +231,7 @@ def scan_access_logs(access_logs_file_path, www_dir_path, tail=0):
         return match_list
 
     except Exception as e:
-        print('[-] ERROR: {}'.format(e))
+        common_functions.print_verbose('[-] ERROR: {}'.format(e))
         logger.log_error(e, module_name)
         return None
 
