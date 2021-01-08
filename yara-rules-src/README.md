@@ -1,1 +1,1 @@
-Un-compiled should be in this directory
+Un-compiled (src code) files should be in this directory
