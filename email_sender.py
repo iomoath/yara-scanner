@@ -52,7 +52,7 @@ def send_message(dict_msg_attr):
 
     # send email
     try:
-        if username is not username != "":
+        if username is not None and username != "":
             with smtplib.SMTP('{}: {}'.format(smtp_host, smtp_port)) as server:
                 server.ehlo()
                 if smtp_ssl:
