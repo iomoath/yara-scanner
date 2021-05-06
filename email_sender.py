@@ -52,12 +52,13 @@ def send_message(dict_msg_attr):
 
     recipients = settings.TO
     message_body = dict_msg_attr["message"]
+    sender = "{} <{}>".format(settings.FROM_NAME, settings.FROM)
 
     # Create the enclosing (outer) message
     outer = MIMEMultipart()
     outer['Subject'] = dict_msg_attr["subject"]
     outer['To'] = COMMASPACE.join(recipients)
-    outer['From'] = dict_msg_attr["from"]
+    outer['From'] = sender
     outer.preamble = 'You will not see this in a MIME-aware mail reader.\n'
 
     # List of attachments, dict_msg_attr["attachments"] contains a list of strings.
@@ -82,7 +83,6 @@ def send_message(dict_msg_attr):
 
     # send email
     try:
-        sender = "{} <{}>".format(settings.FROM_NAME, settings.FROM)
         send(sender, recipients, composed)
     except:
         print("Sending email failed. More info {}: ".format(sys.exc_info()[0]), sys.exc_info()[0])
