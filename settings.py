@@ -38,20 +38,18 @@ verbose_enabled = False
 date_time_format = '%Y-%m-%d %H:%M:%S'
 
 ################ Email Alerts settings ################
-email_alerts_enabled = False
-smtp_host = ""
-smtp_port = 25
+EMAIL_ALERTS_ENABLED = False
+SMTP_HOST = "localhost"
+SMTP_PORT = 25
+SMTP_SEC_PROTOCOL = 'none' # valid vlaues: tls, ssl, none
 
-# SMTP server require SSL/TLS ?
-smtp_ssl = True
-smtp_username = ""
-smtp_password = ""
+SMTP_REQUIRE_AUTH = False
+SMTP_USERNAME = ""
+SMTP_PASSWORD = ""
 
-# Message sender email to be included in message sender field
-smtp_from = "YaraScanner <email@example.org>"
-
-# Reports & alerts will be sent to this email(s)
-email_alert_recipients = ["email@example.org"]
+FROM = "soc@example.org"
+FROM_NAME = "File WatchTower"
+TO = "soc@example.org"
 
 
 # Email body for scan report

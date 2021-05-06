@@ -225,21 +225,9 @@ def tail(file_path, lines=1, _buffer=4098):
     return lines_found[-lines:]
 
 
-def build_smtp_config_dict():
-    t = {
-        "host": settings.smtp_host,
-        "port": settings.smtp_port,
-        "ssl": settings.smtp_ssl,
-        "username": settings.smtp_username,
-        "password": settings.smtp_password,
-        "from": settings.smtp_from,
-        "recipients": settings.email_alert_recipients,
-    }
-    return t
-
 
 def report_incident_by_email(file_path, rules_matched, yara_rules_file_name, event_time):
-    if not settings.email_alerts_enabled:
+    if not settings.EMAIL_ALERTS_ENABLED:
         return
 
     try:
@@ -248,13 +236,13 @@ def report_incident_by_email(file_path, rules_matched, yara_rules_file_name, eve
         if file_name is not None and len(file_name) > 40:
             short_file_name = file_name[0 : 39]
 
-        smtp_mailer_param = build_smtp_config_dict()
-        smtp_mailer_param['message_body'] = build_incident_email_message_body(file_name, file_path, rules_matched, yara_rules_file_name, event_time)
+        smtp_mailer_param = {}
+        smtp_mailer_param['message'] = build_incident_email_message_body(file_name, file_path, rules_matched, yara_rules_file_name, event_time)
         smtp_mailer_param['subject'] = 'Match Found: {}'.format(short_file_name)
 
-        print('[+] Sending incident info to {}'.format(settings.email_alert_recipients))
+        print('[+] Sending incident info to {}'.format(settings.TO))
         email_sender.send_message(smtp_mailer_param)
-        print('[+] Incident info sent to {}'.format(settings.email_alert_recipients))
+        print('[+] Incident info sent to {}'.format(settings.TO))
     except Exception as e:
         print('[-] ERROR: {}'.format(e))
         logger.log_error(e, module_name)

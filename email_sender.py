@@ -8,21 +8,50 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email import encoders
 import sys
+import ssl
+import settings
+
 
 COMMASPACE = ', '
+
+
+
+def send(sender, recipients, composed):
+    if settings.SMTP_SEC_PROTOCOL == "ssl":
+        with smtplib.SMTP(settings.SMTP_HOST, settings.SMTP_PORT, ssl.create_default_context()) as server:
+            server.ehlo_or_helo_if_needed()
+            if settings.SMTP_REQUIRE_AUTH:
+                server.login(settings.SMTP_USERNAME, settings.SMTP_PASSWORD)
+            server.sendmail(sender, recipients, composed)
+            server.close()
+            return True
+    elif settings.SMTP_SEC_PROTOCOL == "tls":
+        with smtplib.SMTP(settings.SMTP_HOST, settings.SMTP_PORT) as server:
+            server.starttls()
+            server.ehlo_or_helo_if_needed()
+
+            if settings.SMTP_REQUIRE_AUTH:
+                server.login(settings.SMTP_USERNAME, settings.SMTP_PASSWORD)
+            server.sendmail(sender, recipients, composed)
+            server.close()
+            return True
+    else:
+        with smtplib.SMTP(settings.SMTP_HOST) as server:
+            server.ehlo_or_helo_if_needed()
+
+            if settings.SMTP_REQUIRE_AUTH:
+                server.login(settings.SMTP_USERNAME, settings.SMTP_PASSWORD)
+            server.sendmail(sender, recipients, composed)
+            server.close()
+            return True
 
 
 def send_message(dict_msg_attr):
     if dict_msg_attr is None:
         return False
 
-    username = dict_msg_attr["username"]
-    password = dict_msg_attr["password"]
-    smtp_host = dict_msg_attr["host"]
-    smtp_port = int(dict_msg_attr["port"])
-    smtp_ssl = bool(dict_msg_attr["ssl"])
-    recipients = dict_msg_attr["recipients"]
-    message_body = dict_msg_attr["message_body"]
+    recipients = settings.TO
+    message_body = dict_msg_attr["message"]
 
     # Create the enclosing (outer) message
     outer = MIMEMultipart()
@@ -50,27 +79,11 @@ def send_message(dict_msg_attr):
     outer.attach(MIMEText(message_body, 'plain'))
     composed = outer.as_string()
 
+
     # send email
     try:
-        if username is not None and username != "":
-            with smtplib.SMTP('{}: {}'.format(smtp_host, smtp_port)) as server:
-                server.ehlo()
-                if smtp_ssl:
-                    server.starttls()
-                    server.ehlo()
-
-                server.login(username, password)
-                server.sendmail(dict_msg_attr["from"], recipients, composed)
-                server.close()
-
-                return True
-        else:
-            with smtplib.SMTP("localhost") as server:
-                server.ehlo()
-                server.sendmail(dict_msg_attr["from"], recipients, composed)
-                server.close()
-                return True
-
+        sender = "{} <{}>".format(settings.FROM_NAME, settings.FROM)
+        send(sender, recipients, composed)
     except:
-        print("Sending email failed. {}".format(sys.exc_info()[0]), sys.exc_info()[0])
+        print("Sending email failed. More info {}: ".format(sys.exc_info()[0]), sys.exc_info()[0])
         raise

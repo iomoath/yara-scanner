@@ -1,5 +1,3 @@
-import exclude
-
 __author__ = "Moath Maharmeh"
 __project_page__ = "https://github.com/iomoath/yara-scanner"
 

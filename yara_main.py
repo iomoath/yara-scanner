@@ -46,18 +46,18 @@ def run_scanner(args):
         print('[+] Report saved to "{}"'.format(report_file_name))
 
     # send report by email
-    if args['gen_report'] and len(settings.smtp_host) > 0 and settings.smtp_port > 0:
+    if args['gen_report'] and settings.EMAIL_ALERTS_ENABLED:
         report = report_generator.generate_report(match_result)
 
         attachment = [{'text': report, 'file_name': report_file_name}]
-        smtp_mailer_param = common_functions.build_smtp_config_dict()
-        smtp_mailer_param['message_body'] = settings.email_body_scan_complete
+        smtp_mailer_param = {}
+        smtp_mailer_param['message'] = settings.email_body_scan_complete
         smtp_mailer_param['subject'] = 'Scan Report {}'.format(common_functions.get_datetime())
         smtp_mailer_param['attachments'] = attachment
 
-        print('[+] Delivering report to {}'.format(settings.email_alert_recipients))
+        print('[+] Delivering report to {}'.format(settings.TO))
         email_sender.send_message(smtp_mailer_param)
-        print('[+] Report sent to {}'.format(settings.email_alert_recipients))
+        print('[+] Report sent to {}'.format(settings.TO))
 
 
 def run_yara_updater():
