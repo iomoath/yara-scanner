@@ -169,6 +169,6 @@ This project uses yara rules from [Neo23x0](https://github.com/Neo23x0/signature
 
 
 ### Meta
-Moath Maharmeh - [@iomoaaz](https://twitter.com/iomoaaz) - moath@vegalayer.com
+Moath Maharmeh -  moath@vegalayer.com
 
 https://github.com/iomoath/yara-scanner
