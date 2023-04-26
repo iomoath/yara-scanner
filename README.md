@@ -1,7 +1,7 @@
 # Yara Scanner
 #### yara-scanner
 
-YaraScanner is a file pattern matching tool based on YARA rules.
+YaraScanner is a file pattern-matching tool based on YARA rules.
 
 
 
