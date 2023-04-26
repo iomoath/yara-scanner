@@ -1,7 +1,7 @@
 # Yara Scanner
 #### yara-scanner
 
-YaraScanner is a simple threat hunting & IOC scanner tool. Yara rules based.
+YaraScanner is a file pattern matching tool based on YARA rules.
 
 
 
